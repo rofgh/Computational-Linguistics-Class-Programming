@@ -17,21 +17,21 @@ def rand(hist):
 ## PART 1 ##
 def clean(line):
 	line = line.decode('utf8')
-	#Getting rid of twitterhandles#
+	#Getting rid of twitterhandles
 	line = re.sub(u'.*@.+','@@@',line)
-	#Getting rid of urls#
+	#Getting rid of urls
 	line = re.sub(u'http.+','www',line)
-	#Getting rid of hashtags#
+	#Getting rid of hashtags
 	line = re.sub(u'#.+','###',line)
 	#And all single letter words...
 	line = re.sub(u'\s\w\s',' ',line)
-	#Getting rid of puncuation#  
+	#Getting rid of puncuation
 	line = re.sub(u'(\b\W+|\W+\b)',' ',line)
-	#Getting rid of whitespace# 
+	#Getting rid of whitespace
 	line = re.sub(u'(^\s+|\s+$)','',line)
 	#Getting rid of numbers, too. Because they don't seem significant at the moment
 	line = re.sub(u'\d+','',line)
-	#lowercasing all#
+	#lowercasing all
 	line = line.lower()
 	return line
 
@@ -39,16 +39,23 @@ def clean(line):
 def normalize(hist):
 	### 3 LINES OF CODE?
 
+	#hist = dict(map(lambda kv: (kv[0], f(kv[1])), my_dictionary.iteritems()))
+	
 
-	map(sum(hist.values()), hist.values())
+	#hist(map()
 
-	print hist.values()
+	for x in hist.values():
+		x = x/sum(hist.values())
+
+	#map(sum(), hist.values())
+
+	#print hist.values()
 	
 
 	# this is a void function that normalizes the counts in hist
 	# given a dictionary of word-frequency pairs, this function modifies the frequencies so that they sum to 1
 	# remove the following print statment once you complete this function
-	#print "Normalize doesn't do anything yet"
+	print "Normalize doesn't do anything yet"
 
 
 def get_freqs(f):
@@ -109,7 +116,7 @@ def main():
 		filter(wordfreqs, stopwords)
 		save_histogram(wordfreqs,fn)
 
-		
+		'''
 		## EXTRA CREDIT ##
 		print "Printing random tweets from",fn
 		for x in range(5):
@@ -118,6 +125,7 @@ def main():
 			for i in range(n):
 				print ' ',rand(wordfreqs),
 			print
+		'''
 		
 		
 
