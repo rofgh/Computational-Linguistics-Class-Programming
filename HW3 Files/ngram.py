@@ -61,14 +61,10 @@ def train(N, smoothing=False):
 	
 	# these three dictionaries will be used to created the relative frequency bigram and trigram dictionaries
 	# If add-1 smoothing is true, the default dictionaries will start with a 1 lambda value
-	if smoothing == True:
-		counts = defaultdict(lambda:1)
-		bicounts = defaultdict(lambda:defaultdict(lambda:1))
-		tricounts = defaultdict(lambda:defaultdict(lambda:defaultdict(lambda:1)))
-	else:
-		counts = defaultdict(lambda:0)
-		bicounts = defaultdict(lambda:defaultdict(lambda:0))
-		tricounts = defaultdict(lambda:defaultdict(lambda:defaultdict(lambda:0)))
+
+	counts = defaultdict(lambda:0)
+	bicounts = defaultdict(lambda:defaultdict(lambda:0))
+	tricounts = defaultdict(lambda:defaultdict(lambda:defaultdict(lambda:0)))
 
 	# here we start iterating over each word
 	for word in dictionary:
@@ -85,11 +81,20 @@ def train(N, smoothing=False):
 				tricounts[dictionary[word][phoneme]][dictionary[word][phoneme+1]][dictionary[word][phoneme+2]]+=1
 	# here we create the relative frequency dictionaries and save them to bigram and trigram, respectively
 	for p1 in counts:
+		# The five lines below this if statement make-up the add-1 smoothing
+		if smoothing == True:
+			default = 1
+			for i in counts:
+				bicounts[p1].setdefault(i,default)
+				for x in counts:
+					tricounts[p1][i].setdefault(x,default)
+		# here we are back to creating our relative frequency dictionaries (ie bigram and trigram)	
 		for p2 in bicounts[p1]:
 			bigram[p1][p2] = float(bicounts[p1][p2])/float(counts[p1])
 			for p3 in tricounts[p1][p2]:
 				#print p1,p2,p3,"accounts for",tricounts[p1][p2][p3],"out of", bicounts[p1][p2], "occurences of",p1,p2
 				trigram[p1][p2][p3] = float(tricounts[p1][p2][p3])/float(bicounts[p1][p2])
+
 	return bigram, trigram
 
 
@@ -160,10 +165,11 @@ def g_word(N, bigram, trigram):
 			p2 = current
 	return word
 
-def mysdict(N):
-	mysdictionary = defaultdict(lambda:'')
-	mys = open(sys.argv[3])
-	for x in mys.readlines():
+def testdictionary(N):
+	testdict = defaultdict(lambda:'')
+	test = open(sys.argv[3])
+	for x in test.readlines():
+		x = re.sub("\n","",x)
 		entry = x.split()
 		# insert our word-beginning #
 		entry.insert(0,"#")
@@ -172,31 +178,31 @@ def mysdict(N):
 			entry.insert(0,"#")
 		# append our word-ending #
 		entry.append("#")
-		# takes the first string, the orthographic word, as the key and the rest as the values.
-		mysdictionary[x] = entry
-	return mysdictionary
+		testdict[x] = entry
+	print testdict	
+	return testdict
 
-def wordprob():
+def wordprob(N, bigram, trigram, v):
+	logprob= 0.0
+	if N == 2:
+		for i in range(1,len(v)): logprob += math.log(bigram[v[i-1]][v[i]],2)
+	if N == 3:
+		for i in range(2,len(v)): logprob += math.log(trigram[v[i-2]][v[i-1]][v[i]],2)
+	#Needs to return a word probability!
+	prob = 2**logprob
+	return prob, logprob
 
 
-def perplexity(N, bigram, trigram, mys):
-	# logsum is the 
-	logsum = 0.0
+
+def perplexity(N, testdict, logsum):
 	# corpusSize is my N (I already used an N variable, and don't want to get rid of it!)
-	# corpusSize is the product of the probability of each phoneme of the corpus, including the end #s
+	# corpusSize is the summed probability of each phoneme of the corpus, including the end #s
 	# of each word
 	corpusSize = 0
-	'''
-	If N == 2, use bigram to determine the perplexity of the test file, which is represented by the mys dictionary
-	If N == 3, use trigram to determine the perplexity of the test file, which is represented by the mys dictionary
-	(both of these should automatically have add-1 smoothing applied with the 4th argument gate)
-	'''
-	if N == 2:
-		bigram
-	if N == 3:
-		trigram
-
+	for k,v in testdict.items():
+			corpusSize+=(len(v)-(N-1))
 	P = 2**(logsum*((-1)/corpusSize))
+	return P
 
 
 
@@ -213,20 +219,20 @@ def main():
 	For words in 4th arg:
 		Print Word, Tab, Probability of word
 	Print perplexity
-	CAN I CHANGE THE BIGRAMS TO START WITH 1???
 	'''
 	try:
 		if sys.argv[3]:
+			#get information on the training data, produces two returned dictionaries: bigram and trigram
 			bigram, trigram = train(N, smoothing=True)
-			mys = mysdict(N)
-
-			for x in mys:
-				prob = wordprob(x)
-				print prob
-			P = perplexity(bigram, trigram, mys)
-			for x in mys:
-				print mys[x], 
-			print P
+			# Creates a dictionary of the test data.  {AH AH AH : ('AH', 'AH', 'AH')
+			testdict = testdictionary(N)
+			logsum = 0.0
+			for k,v in testdict.items():
+				prob, wps = wordprob(N, bigram, trigram, v)
+				logsum+=wps
+				print k,"\t", prob,"\t","OR","\t","%.10f" % (prob)
+			P = perplexity(N, testdict, logsum)
+			print "Perplexity:","\t",P,"\t","OR","\t","%.0f" % (P)
 	# If there is no 4th argument, the script should:
 	# Print 25 random words based on an unsmoothed Ngram
 	except:
@@ -234,7 +240,7 @@ def main():
 		bigram, trigram = train(N)
 		print "Here are 25 random words using unsmoothed Ngrams."
 		for x in range(25):
-			print g_word(N, bigram, trigram)
+			 print g_word(N, bigram, trigram)
 	# Finish timer
 	toc()
 
@@ -246,6 +252,17 @@ if __name__ == "__main__":
 
 
 
+'''
+If N == 2, use bigram to determine the perplexity of the test file, which is represented by the test dictionary
+If N == 3, use trigram to determine the perplexity of the test file, which is represented by the test dictionary
+(both of these should automatically have add-1 smoothing applied with the 4th argument gate)
+if N == 2:
+	#bigram
+	print "bi-gram!"
+if N == 3:
+	#trigram
+	print "tri-gram!"
+'''
 
 
 '''
