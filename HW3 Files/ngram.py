@@ -6,37 +6,27 @@ from collections import defaultdict
 from timeit import default_timer as timer
 '''
 This script at the command line: python ngram.py train.txt 2/3 x.txt
-train.txt is the training doc:  train.txt is the full text, mini_train.txt is a small version
-2/3 is the choice between bigram or trigram, the argument should either be 2 or 3
-x.txt is the mystery test file (either y.txt or x.txt)
+	train.txt is the training doc:  train.txt is the full text, mini_train.txt is a small version
+	2/3 is the choice between bigram or trigram, the argument should either be 2 or 3
+	x.txt is the mystery test file (either y.txt or x.txt)
 '''
-# tic and toc: time the operation from beginning to end and return a time at the end.
-def tic():
-    global start
-    start = timer()
-
-def toc():
-    end = timer()
-    elapsed = (end - start)
-    print('Time passed: %.5f sec' % (elapsed))
-
-# Take N and decide between a bi-gram, tri-gram or return an error
-def biortri(N):
-	if N == 2 or N == 3:
-		return
-	else:
-		print "Sorry, this program can't handle anything except bigrams or tri-grams at the moment!"
-		exit()
 
 def train(N, smoothing=False):
 	'''
 	1. Takes each line in the training text, properly splits it apart;
-	2. If smoothing == True, the default dictionaries for bicount or tricount are lambda:1
-	3. Counts frequency each phoneme is followed by some other and produces a bigram dictionary;
-	4. Counts frequency each phoneme pair is followed by some other and produces a trigram dictionary;
-	5. Returns two dictionaries 'bigram' and 'trigram'
+	2. Counts frequency each phoneme is followed by some other and produces a bigram dictionary;
+	3. Counts frequency each phoneme pair is followed by some other and produces a trigram dictionary;
+	4. Returns two dictionaries 'bigram' and 'trigram'
+	5. If smoothing == True add-1 smoothing will take place by adding 1 to every entry that has a value of 0
 				Lots of dictionaries and embedded dictionaries...
+	train is given:
+			N:			there is one spot that we need to know if we are doing bi- or tri-grams
+			smoothing:	if there is a 4th argument, smoothing is True, else is False
+	train returns:
+			bigram & trigram: it returns both of these no matter the N value or the smoothing gate
+								bigram & trigram are our most important relative frequency dictionaries
 	'''
+	# 1.
 	# t is the training doc of word/phonemes pairings
 	t = open(sys.argv[1])
 	# Probably a better name for this, but seemed simple enough to call it 'dictionary'
@@ -54,13 +44,12 @@ def train(N, smoothing=False):
 		# takes the first string, the orthographic word, as the key and the rest as the values.
 		dictionary[entry.pop(0)] = entry
 	t.close()
-
+	# 2. & 3.
 	# these two dictionaries could be returned or made global, it seemed easier to just make them global
 	bigram = defaultdict(lambda:{})
 	trigram = defaultdict(lambda:defaultdict(lambda:{}))
 	
 	# these three dictionaries will be used to created the relative frequency bigram and trigram dictionaries
-	# If add-1 smoothing is true, the default dictionaries will start with a 1 lambda value
 
 	counts = defaultdict(lambda:0)
 	bicounts = defaultdict(lambda:defaultdict(lambda:0))
@@ -79,23 +68,40 @@ def train(N, smoothing=False):
 			# frequency of all [p1][p2][p3]: we need a new for-loop to avoid asking it to iterate through more items than it has
 			for phoneme in range(len(dictionary[word])-2):
 				tricounts[dictionary[word][phoneme]][dictionary[word][phoneme+1]][dictionary[word][phoneme+2]]+=1
-	# here we create the relative frequency dictionaries and save them to bigram and trigram, respectively
-	for p1 in counts:
-		# The five lines below this if statement make-up the add-1 smoothing
-		if smoothing == True:
-			default = 1
-			for i in counts:
-				bicounts[p1].setdefault(i,default)
-				for x in counts:
-					tricounts[p1][i].setdefault(x,default)
-		# here we are back to creating our relative frequency dictionaries (ie bigram and trigram)	
-		for p2 in bicounts[p1]:
-			bigram[p1][p2] = float(bicounts[p1][p2])/float(counts[p1])
-			for p3 in tricounts[p1][p2]:
-				#print p1,p2,p3,"accounts for",tricounts[p1][p2][p3],"out of", bicounts[p1][p2], "occurences of",p1,p2
-				trigram[p1][p2][p3] = float(tricounts[p1][p2][p3])/float(bicounts[p1][p2])
-
-	return bigram, trigram
+	# 5.
+	if smoothing == True:
+		for p1 in counts:
+			# here we are creating our relative frequency dictionaries (ie bigram and trigram)	
+			for p2 in counts:
+				# Smoothing
+				if bicounts[p1][p2] == 0:
+					bicounts[p1][p2] = 1
+					counts[p1]+=1
+				bigram[p1][p2] = 2**(math.log(bicounts[p1][p2],2)-math.log(counts[p1],2))
+				for p3 in counts:
+					# Smoothing
+					if tricounts[p1][p2][p3] == 0:
+						tricounts[p1][p2][p3] = 1
+						bicounts[p1][p2]+=1
+						counts[p1]+=1
+					#print p1,p2,p3,"accounts for",tricounts[p1][p2][p3],"out of", bicounts[p1][p2], "occurences of",p1,p2
+					trigram[p1][p2][p3] = 2**(math.log(tricounts[p1][p2][p3],2)-math.log(bicounts[p1][p2],2))
+					#print tricounts[p1][p2][p3],bicounts[p1][p2],p1,p2,p3
+		# 4.
+		return bigram, trigram
+	else:
+		for p1 in counts:
+			# here we are (back) to creating our relative frequency dictionaries (ie bigram and trigram)	
+			for p2 in bicounts[p1]:
+				bigram[p1][p2] = 2**(math.log(bicounts[p1][p2],2)-math.log(counts[p1],2))
+				for p3 in tricounts[p1][p2]:
+					#print p1,p2,p3,"accounts for",tricounts[p1][p2][p3],"out of", bicounts[p1][p2], "occurences of",p1,p2
+					trigram[p1][p2][p3] = 2**(math.log(tricounts[p1][p2][p3],2)-math.log(bicounts[p1][p2],2))
+					#print tricounts[p1][p2][p3],bicounts[p1][p2],p1,p2,p3
+		# 4.
+		return bigram, trigram
+	
+	
 
 
 def bi_g_phoneme(p1, bigram):
@@ -106,11 +112,16 @@ def bi_g_phoneme(p1, bigram):
 	/ = .4 | = .3 \ = .2 and - = .1               ////|||\\-
 	So, then we can generate a random number between 0 and 1 (let's say .7865 for now)
 	Since we are working with dictionaries where the order of items doesn't matter, we can just start
-	taking any item's relative frequency (though it will always be item[0], we just won't have any idea
-	which item that actually is) and subtracting it from our random number, let's go in the order they
+	taking any item's relative frequency and subtracting it from our random number, let's go in the order they
 	are above: .7865-.4=.3865  .3865-.3=.0865 .0865-.2=less than zero, so \ wins.  And since higher
 	frequency items will take up more of a range, they will be more likely to zero out the random number,
 	and thus more likely to occur in our generated words.
+
+	bi_g_phoneme is given:
+			p1:			the preceding phoneme in word being generated
+			bigram:		in order to determine the prob. of a phoneme pair
+	bi_g_phoneme returns:
+			p2:			the next phoneme in the word that is being generated
 	'''
 
 	rand = random.uniform(0,1)
@@ -122,6 +133,7 @@ def bi_g_phoneme(p1, bigram):
 def tri_g_phoneme(p1, p2, trigram):
 	'''
 	This is the same as above, but just looks at the trigram situations instead of bigram
+	tri_g_phoneme is given two preceding phonemes, in order to provide more context
 	'''
 	rand = random.uniform(0,1)
 	for p3 in trigram[p1][p2]:
@@ -130,6 +142,15 @@ def tri_g_phoneme(p1, p2, trigram):
 	return p3
 
 def g_word(N, bigram, trigram):
+	'''
+	g_word produces a list of probabilistically generated phonemes (i.e. a word)
+	g_word is given:
+			N:	 		to decide between bigram or trigram
+			bigram:	 	in order to give bi_g_phoneme the dictionary
+			trigram: 	in order to give tri_g_phoneme the dictionary
+	g_word returns:
+			word: 		the list of phonemes (i.e. a word)
+	'''
 	# for bigrams
 	if N == 2:
 		# words for bigrams will start with a #
@@ -165,54 +186,30 @@ def g_word(N, bigram, trigram):
 			p2 = current
 	return word
 
-def testdictionary(N):
-	testdict = defaultdict(lambda:'')
-	test = open(sys.argv[3])
-	for x in test.readlines():
-		x = re.sub("\n","",x)
-		entry = x.split()
-		# insert our word-beginning #
-		entry.insert(0,"#")
-		# Add another "#" for trigrams
-		if N == 3:
-			entry.insert(0,"#")
-		# append our word-ending #
-		entry.append("#")
-		testdict[x] = entry
-	print testdict	
-	return testdict
-
-def wordprob(N, bigram, trigram, v):
+def wordprob(N, bigram, trigram, entry):
+	'''
+	wordprob calculates the probability of each word (i.e. line in the test data)
+	wordprob is given:
+			N:	 		to decide between bigram or trigram
+			bigram:	 	in order to find the probability of each phoneme pair
+			trigram: 	in order to find the probability of each phoneme triplet
+			entry:		the list of phonemes of the test word
+	wordprob returns:
+			prob: 		the word probability
+			logprob:	the sum of the log of each pair/triplet's probability
+	'''
 	logprob= 0.0
 	if N == 2:
-		for i in range(1,len(v)): logprob += math.log(bigram[v[i-1]][v[i]],2)
+		for i in range(1,len(entry)): logprob += math.log(bigram[entry[i-1]][entry[i]],2)
 	if N == 3:
-		for i in range(2,len(v)): logprob += math.log(trigram[v[i-2]][v[i-1]][v[i]],2)
-	#Needs to return a word probability!
+		for i in range(2,len(entry)): logprob += math.log(trigram[entry[i-2]][entry[i-1]][entry[i]],2)
+
 	prob = 2**logprob
 	return prob, logprob
 
-
-
-def perplexity(N, testdict, logsum):
-	# corpusSize is my N (I already used an N variable, and don't want to get rid of it!)
-	# corpusSize is the summed probability of each phoneme of the corpus, including the end #s
-	# of each word
-	corpusSize = 0
-	for k,v in testdict.items():
-			corpusSize+=(len(v)-(N-1))
-	P = 2**(logsum*((-1)/corpusSize))
-	return P
-
-
-
-
 def main():
-	tic()
 	# save the decision of bigram or trigram as N
 	N = int(sys.argv[2])
-	# Determine whether to run a bi-gram or a tri-gram or return an error
-	biortri(N)
 	'''
 	If there is a 4th argument, the script should:
 	Build smooth ngram
@@ -224,53 +221,43 @@ def main():
 		if sys.argv[3]:
 			#get information on the training data, produces two returned dictionaries: bigram and trigram
 			bigram, trigram = train(N, smoothing=True)
-			# Creates a dictionary of the test data.  {AH AH AH : ('AH', 'AH', 'AH')
-			testdict = testdictionary(N)
-			logsum = 0.0
-			for k,v in testdict.items():
-				prob, wps = wordprob(N, bigram, trigram, v)
-				logsum+=wps
-				print k,"\t", prob,"\t","OR","\t","%.10f" % (prob)
-			P = perplexity(N, testdict, logsum)
-			print "Perplexity:","\t",P,"\t","OR","\t","%.0f" % (P)
+			logprobsum = 0.0
+			corpus_size = 0.0
+			test = open(sys.argv[3])
+			# run through all the "words" in the test doc, formatting them to be analyzed
+			for x in test.readlines():
+				x = re.sub("\n","",x)
+				entry = x.split()
+				# insert our word-beginning #
+				entry.insert(0,"#")
+				# Add another "#" for trigrams
+				if N == 3:
+					entry.insert(0,"#")
+				# append our word-ending #
+				entry.append("#")
+				prob, logprob = wordprob(N, bigram, trigram, entry)
+				logprobsum+=logprob
+				# corpus_size is my N (I already used an N variable, and don't want to get rid of it!)
+				# corpus_size is the summed probability of each phoneme of the corpus, including the end #s
+				# of each word
+				corpus_size+=(len(entry)-(N-1))
+				print x,"\t",prob
+				#print "Word: {:<30}Prob: {:<20}OR    {:.10f}".format(x, prob, prob)
+			# P is the perplexity/likelihood of the corpus, given the training data
+			P = 2**(logprobsum*((-1)/corpus_size))
+			print "{:<29} Perplexity: {:<20}".format("",P)
+
 	# If there is no 4th argument, the script should:
 	# Print 25 random words based on an unsmoothed Ngram
 	except:
-		#get information on the training data, produces two returned dictionaries: bigram and trigram
 		bigram, trigram = train(N)
-		print "Here are 25 random words using unsmoothed Ngrams."
-		for x in range(25):
+		if N == 2:
+			prefix = "bi-"
+		if N == 3:
+			prefix = "tri-"
+		r = 25
+		print "Here are {} random words using unsmoothed {}grams:".format(r,prefix)
+		for x in range(r):
 			 print g_word(N, bigram, trigram)
-	# Finish timer
-	toc()
-
 if __name__ == "__main__":
     main()
-
-
-
-
-
-
-'''
-If N == 2, use bigram to determine the perplexity of the test file, which is represented by the test dictionary
-If N == 3, use trigram to determine the perplexity of the test file, which is represented by the test dictionary
-(both of these should automatically have add-1 smoothing applied with the 4th argument gate)
-if N == 2:
-	#bigram
-	print "bi-gram!"
-if N == 3:
-	#trigram
-	print "tri-gram!"
-'''
-
-
-'''
-for fphoneme in counts.keys():
-		print "{:>2} {} {:>2} {}".format(fphoneme, "appears",counts[fphoneme],"times")
-		for sphoneme in bicounts[fphoneme]:
-			print "{} {} {:>2} {}".format("         followed by",sphoneme,bicounts[fphoneme][sphoneme],"times")
-			if N == 3:
-				for tphoneme in tricounts[fphoneme][sphoneme]:
-					print "{} {} {:>2} {}".format("                  followed by",tphoneme,tricounts[fphoneme][sphoneme][tphoneme],"times")
-'''
