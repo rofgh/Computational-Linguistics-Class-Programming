@@ -20,7 +20,7 @@ unit-test:
 test: unit-test
 
 run:
-	python HW6\ Files/willy.py english_cnf.gr sentences.sen
+	python HW6\ Files/willy.py HW6\ Files/english_cnf.gr HW6\ Files/sentences.sen
 
 install:
 	pip install -r requirements.txt
