@@ -15,3 +15,7 @@
     make test
 
 To run the unit tests
+
+# Run
+
+   make run

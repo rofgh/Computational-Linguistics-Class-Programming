@@ -4,3 +4,4 @@ Opened\ ZIP\ Files/
 .venv
 .cache
 CONFIG
+src/tests/__pycache__

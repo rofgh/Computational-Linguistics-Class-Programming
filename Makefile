@@ -19,6 +19,9 @@ unit-test:
 
 test: unit-test
 
+run:
+	python HW6\ Files/willy.py
+
 install:
 	pip install -r requirements.txt
 
