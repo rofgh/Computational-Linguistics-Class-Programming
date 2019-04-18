@@ -1,0 +1,77 @@
+# This grammar uses a convention that
+#    - terminals are lowercase          (president)
+#    - preterminals are capitalized     (Noun)
+#    - other nonterminals are all-caps  (NP)
+# 
+# This convention just makes grammars more readable to humans.  Thus:
+#
+#    - When *you* are writing grammars, you should 
+#      follow this convention unless you have a good reason not to.  
+#
+#    - But your *program* should still work with grammars that don't 
+#      follow this convention.  It should not pay any attention to
+#      upper/lower case.  From your program's point of view, 
+#      if there is at least one rule for rewriting a symbol, then
+#      that symbol is a nonterminal and should be rewritten.
+#######################
+
+# Rules for creating full sentences.
+# Increase in declarative sentences, 2/8 probability of exclamatory sentences, 1/8 of Is it true that" questions.
+5 ROOT	S .
+2 ROOT	S !
+# mixing terminals and nonterminals is ok.
+1 ROOT	is it true that S ?
+
+# The basic grammar rules.  Here's what the abbreviations stand for:
+#    S  = sentence
+#    NP = noun phrase
+#    VP = verb phrase
+#    PP = prepositional phrase
+#    Det = determiner (sometimes called "article")
+#    Prep = preposition
+#    Adj = adjective
+
+
+1 S	NP VP
+1 VP	Verb NP
+# Increase of Det/Noun to create a 1/8 probability of NP->NP/PP, which was over-generating and getting stuck in loops
+7 NP	Det Noun
+1 NP	NP PP
+1 PP	Prep NP
+# Increase in Noun->Adj/Noun in order to increase double adjectives
+4 Noun	Adj Noun
+
+# Vocabulary.  Your program can see that "ate" is a terminal
+# symbol because there exists no rule for rewriting it.
+# Any symbol that can rewrite as a terminal (or a string of 
+# terminals, like "chief of staff") is called a "preterminal."  Notice 
+# that a preterminal is a special kind of nonterminal.
+
+# Changes in the verb frequencies, in order to get a more natural mix
+4 Verb	ate
+4 Verb	wanted
+2 Verb	kissed
+2 Verb	understood
+1 Verb	pickled
+
+# Changes in the determiners to disfavor 'every'
+3 Det	the
+3 Det	a
+1 Det	every
+
+# Increase in all Nouns in order that the Noun->Adj/Noun doesn't overpower them
+3 Noun	president
+3 Noun	sandwich
+3 Noun	pickle
+3 Noun	chief of staff
+3 Noun	floor
+
+1 Adj	fine
+1 Adj	delicious
+1 Adj	perplexed
+1 Adj	pickled
+
+1 Prep	with
+1 Prep	on
+1 Prep	under
+1 Prep	in

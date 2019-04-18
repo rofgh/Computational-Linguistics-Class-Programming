@@ -1,0 +1,128 @@
+# -------------------------------------------------------------------------------- #
+# ROOT RULES
+1 ROOT	S .
+1 ROOT	S !
+1 ROOT	Q ?
+# [PART 2, e)]  So far, I can only formulate this as a ROOT because otherwise something drastic needs to happen in order to avoid "the president thought --that that-- a pickle pickled the pickle perplexed the president"  or "is it true that Sally ate the pickle perplexed the president" 
+# And reduced relative clauses must be avoided at the beginning of such sentences...
+1 ROOT	U CVP .
+
+# -------------------------------------------------------------------------------- #
+# S (Sentence) RULES
+10 S	NP V
+1 S	S and S
+1 CP	U
+1 CP	R
+# Complementized relative clauses
+1 U	C S
+# Reduced relative clauses
+1 R	S
+1 Q	True CP
+1 Q	S
+1 True	is it true
+
+
+# -------------------------------------------------------------------------------- #
+# VP RULES, including INTRANSITIVE VERBS
+8 V	VP
+1 V	TRANSVP
+10 VP	Verb NP
+# [PART 2, c), extra]  Might be a mistake, but I sort of like the sentences that are created with an additional PP allowed connected to the VP directly.
+1 VP	VP PP
+# [PART 2, b), 1 of 4]
+1 VP	VP Conj VP
+# [PART 2, d)]
+1 VP	CVerbO CP
+1 VP	CVerbOU U
+
+# TRANSVP RULES
+# [PART 2, c)]
+1 TRANSVP	TRANSVP Conj TRANSVP
+1 TRANSVP	TRANSVP PP
+5 TRANSVP	sighed
+5 TRANSVP	died
+
+
+# Verb RULES, including TRANSITIVE VERBS
+# [PART 2, b), 2 of 4] add Verb coordination (since VP that produce transitive Verbs require an NP, we also need Verb coordination....)
+1 Verb	Verb Conj Verb
+1 Verb	ate
+1 Verb	wanted
+1 Verb	kissed
+1 Verb	understood
+1 Verb	pickled
+1 Verb	tickled
+# [PART 2, g), 1 of 3]  as a phrasal verb, I don't feel that it is appropriate to create a more general rule for this.  Certainly "VP-> worked PP" is close, but it creates too many weird sentences.  "The president worked in the chief of staff."?  "that every president worked under Sally under Sally perplexed the floor."??
+1 Verb	worked on
+
+# C RULES
+1 C	that
+1 C	how
+
+#Verbs that can take CPs as subjects
+1 CVP 	CVerb NP
+1 CVerb	perplexed
+1 CVerb	tickled
+
+
+#Verbs that can take CPs as objects
+1 CVerbO	thought 
+1 CVerbO	remembered
+1 CVerbO	believed
+
+#Verbs that prefer unreduced relative clauses as objects (it doesn't HAVE to, and sentences like "Sally read the president died" work fine, but longer sentences without it get really weird in a way that the other CVerbOs don't seem to...)
+10 CVerbOU	read
+
+
+
+
+# -------------------------------------------------------------------------------- #
+# NP RULES, including Det RULES and Noun RULES
+20 NP	Det Noun
+# [PART 2, b), 3 of 4] # add NP coordination, which should allow "Sally and the president" and "the president and every pickle"
+2 NP	NP Conj NP
+# [PART 2, a)] add Sally, which must be a NP, in order to not have "the Sally" 
+6 NP	Sally
+1 NP	NP PP
+
+# Det RULES
+3 Det	the
+3 Det	a
+1 Det	every
+
+# Noun RULES
+3 Noun	Adj Noun
+2 Noun	president
+2 Noun	sandwich
+2 Noun	pickle
+2 Noun	chief of staff
+2 Noun	floor
+# [PART 2, g), 2 of 3]
+2 Noun	desk
+# [PART 2, g), 3 of 3]
+2 Noun	proposal
+
+# -------------------------------------------------------------------------------- #
+# Adj RULES
+# [PART 2, f)] I could just add the whole preterminal of 'Degree' or adjectival 'Adverb' here, but I don't think it's as nicely simple and will end up making weird-sounding sentences, I think.  And repeating other adverbs doesn't really work as well....
+1 Adj	very Adj
+1 Adj	fine
+1 Adj	delicious
+1 Adj	perplexed
+1 Adj	pickled
+1 Adj	tickled
+
+# -------------------------------------------------------------------------------- #
+# PP RULES, including Prep RULES
+1 PP	Prep NP
+1 Prep	with
+1 Prep	on
+1 Prep	under
+1 Prep	in
+
+# -------------------------------------------------------------------------------- #
+# [PART 2, b), 4 of 4], in addition to producing 'and's, Conj will produce 'or's
+# Conj RULES
+# Favors 'and' over 'or' 5 to 1
+5 Conj	and
+1 Conj	or

@@ -50,12 +50,11 @@ def train(N, smoothing=False):
 	trigram = defaultdict(lambda:defaultdict(lambda:{}))
 	
 	# these three dictionaries will be used to created the relative frequency bigram and trigram dictionaries
-
 	counts = defaultdict(lambda:0)
 	bicounts = defaultdict(lambda:defaultdict(lambda:0))
 	tricounts = defaultdict(lambda:defaultdict(lambda:defaultdict(lambda:0)))
 
-	# here we start iterating over each word
+	# here we start iterating over each word and creating counts for each phoneme pair and triplet
 	for word in dictionary:
 		# and each phoneme in the word (minus the word-ending # that we can ignore here)
 		for phoneme in range(len(dictionary[word])-1):
@@ -68,41 +67,25 @@ def train(N, smoothing=False):
 			# frequency of all [p1][p2][p3]: we need a new for-loop to avoid asking it to iterate through more items than it has
 			for phoneme in range(len(dictionary[word])-2):
 				tricounts[dictionary[word][phoneme]][dictionary[word][phoneme+1]][dictionary[word][phoneme+2]]+=1
-	# 5.
-	if smoothing == True:
-		for p1 in counts:
-			# here we are creating our relative frequency dictionaries (ie bigram and trigram)	
+	for p1 in counts:
+		# 5.	This will just add 1 to each of the 40 bottom level phoneme entries in bicounts and tricounts
+		#			i.e. it adds 1 to 1600 keys in bicounts and 1 to 64000 keys in tricounts:  this will initialize
+		#			keys not seen in the training data with a value of 1, and add 1 to whatever value
+		#			already-existing keys have.
+		if smoothing == True:
 			for p2 in counts:
-				# Smoothing
-				if bicounts[p1][p2] == 0:
-					bicounts[p1][p2] = 1
-					counts[p1]+=1
-				bigram[p1][p2] = 2**(math.log(bicounts[p1][p2],2)-math.log(counts[p1],2))
+				bicounts[p1][p2]+=1
 				for p3 in counts:
-					# Smoothing
-					if tricounts[p1][p2][p3] == 0:
-						tricounts[p1][p2][p3] = 1
-						bicounts[p1][p2]+=1
-						counts[p1]+=1
-					#print p1,p2,p3,"accounts for",tricounts[p1][p2][p3],"out of", bicounts[p1][p2], "occurences of",p1,p2
-					trigram[p1][p2][p3] = 2**(math.log(tricounts[p1][p2][p3],2)-math.log(bicounts[p1][p2],2))
-					#print tricounts[p1][p2][p3],bicounts[p1][p2],p1,p2,p3
-		# 4.
-		return bigram, trigram
-	else:
-		for p1 in counts:
-			# here we are (back) to creating our relative frequency dictionaries (ie bigram and trigram)	
-			for p2 in bicounts[p1]:
-				bigram[p1][p2] = 2**(math.log(bicounts[p1][p2],2)-math.log(counts[p1],2))
-				for p3 in tricounts[p1][p2]:
-					#print p1,p2,p3,"accounts for",tricounts[p1][p2][p3],"out of", bicounts[p1][p2], "occurences of",p1,p2
-					trigram[p1][p2][p3] = 2**(math.log(tricounts[p1][p2][p3],2)-math.log(bicounts[p1][p2],2))
-					#print tricounts[p1][p2][p3],bicounts[p1][p2],p1,p2,p3
-		# 4.
-		return bigram, trigram
-	
-	
-
+					tricounts[p1][p2][p3]+=1
+		# Finishing the bigram and trigram dictionaries, finally
+		for p2 in bicounts[p1]:
+			bigram[p1][p2] = 2**(math.log(bicounts[p1][p2],2)-math.log(counts[p1],2))
+			for p3 in tricounts[p1][p2]:
+				#print p1,p2,p3,"accounts for",tricounts[p1][p2][p3],"out of", bicounts[p1][p2], "occurences of",p1,p2
+				trigram[p1][p2][p3] = 2**(math.log(tricounts[p1][p2][p3],2)-math.log(bicounts[p1][p2],2))
+				#print tricounts[p1][p2][p3],bicounts[p1][p2],p1,p2,p3
+	# 4.
+	return bigram, trigram
 
 def bi_g_phoneme(p1, bigram):
 	'''
@@ -202,7 +185,7 @@ def wordprob(N, bigram, trigram, entry):
 	if N == 2:
 		for i in range(1,len(entry)): logprob += math.log(bigram[entry[i-1]][entry[i]],2)
 	if N == 3:
-		for i in range(2,len(entry)): logprob += math.log(trigram[entry[i-2]][entry[i-1]][entry[i]],2)
+		for i in range(2,len(entry)): logprob += math.log(	trigram[entry[i-2]][entry[i-1]][entry[i]],2)
 
 	prob = 2**logprob
 	return prob, logprob
@@ -221,7 +204,10 @@ def main():
 		if sys.argv[3]:
 			#get information on the training data, produces two returned dictionaries: bigram and trigram
 			bigram, trigram = train(N, smoothing=True)
+			# logprobsum is the cumulative count of the log of the probability of each phoneme pair/triplet
 			logprobsum = 0.0
+			# corpus_size is my N (I already used an N variable, and don't want to get rid of it!)
+			# corpus_size is the number of phonemes of the corpus, including the end #s of each word
 			corpus_size = 0.0
 			test = open(sys.argv[3])
 			# run through all the "words" in the test doc, formatting them to be analyzed
@@ -235,11 +221,9 @@ def main():
 					entry.insert(0,"#")
 				# append our word-ending #
 				entry.append("#")
+				# get a probability for each word, and add the cumulative probabilities to logprobsum
 				prob, logprob = wordprob(N, bigram, trigram, entry)
 				logprobsum+=logprob
-				# corpus_size is my N (I already used an N variable, and don't want to get rid of it!)
-				# corpus_size is the summed probability of each phoneme of the corpus, including the end #s
-				# of each word
 				corpus_size+=(len(entry)-(N-1))
 				print x,"\t",prob
 				#print "Word: {:<30}Prob: {:<20}OR    {:.10f}".format(x, prob, prob)

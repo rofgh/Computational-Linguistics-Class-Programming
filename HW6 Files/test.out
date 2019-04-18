@@ -1,0 +1,25 @@
+PARSING::	have a bonbon
+No Parse!
+
+PARSING::	have a bonbon .
+No Parse!
+
+PARSING::	have a bonbon !
+Tree  1  weight:	34.97
+Tree  1  parse:
+( ROOT ( VP ( V have ) ( NP ( Det a ) ( N bonbon ) ) ) ( Exclam ! ) )
+
+PARSING::	the puppy and the fine fly
+No Parse!
+
+PARSING::	the duck eat -ed his delicious sandwich with a pickle .
+Tree  1  weight:	59.57
+Tree  1  parse:
+( ROOT ( S ( NP ( Det the ) ( N duck ) ) ( VP ( V ( V eat ) ( Vsuff -ed ) ) ( NP ( Det his ) ( N ( Adj delicious ) ( N ( N sandwich ) ( PP ( P with ) ( NP ( Det a ) ( N pickle ) ) ) ) ) ) ) ) ( Period . ) )
+Tree  2  weight:	59.57
+Tree  2  parse:
+( ROOT ( S ( NP ( Det the ) ( N duck ) ) ( VP ( V ( V eat ) ( Vsuff -ed ) ) ( NP ( Det his ) ( N ( N ( Adj delicious ) ( N sandwich ) ) ( PP ( P with ) ( NP ( Det a ) ( N pickle ) ) ) ) ) ) ) ( Period . ) )
+Tree  3  weight:	61.68
+Tree  3  parse:
+( ROOT ( S ( NP ( Det the ) ( N duck ) ) ( VP ( VP ( V ( V eat ) ( Vsuff -ed ) ) ( NP ( Det his ) ( N ( Adj delicious ) ( N sandwich ) ) ) ) ( PP ( P with ) ( NP ( Det a ) ( N pickle ) ) ) ) ) ( Period . ) )
+

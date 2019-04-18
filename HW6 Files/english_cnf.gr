@@ -1,0 +1,148 @@
+1.58 ROOT S Period
+1.58 ROOT S Exclam
+15.58 ROOT VP Exclam
+15.39 ROOT V Exclam
+
+0.0 Period .
+0.0 Exclam !
+
+0.00 S NP VP
+3.81 S NP V
+
+0.00 SBAR Comp S
+0.00 Comp that
+
+3.81 VP V NP
+3.81 VP V N
+1.49 VP V VP
+5.30 VP V V
+7.62 VP V PP
+5.81 VP VP PP
+7.62 VP Modal V
+3.81 VP Modal VP
+1.81 VP VComp SBAR
+3.81 VP V Adj
+
+2.81 Adj Intens Adj
+1.00 Intens very
+1.00 Intens somewhat
+1.00 Intens so
+
+0.00 Plural -s
+
+3.70 N N Plural
+3.70 N Adj N
+3.70 N N PP
+
+3.70 NP Det N
+
+3.81 VP VP ConjVP
+3.81 V V ConjV
+5.70 NP NP ConjNP
+3.70 N N ConjN
+2.81 Adj Adj ConjAdj
+0.00 ConjAdj Conj Adj
+0.00 ConjNP Conj NP
+0.00 ConjVP Conj VP
+0.00 ConjV Conj V
+0.00 ConjN Conj N
+0.00 Conj and
+0.00 Conj or
+
+0.00 Inf to
+5.09 V Inf V
+
+3 Modal will
+3 Modal would
+3 Modal should
+3 Modal could
+3 Modal can
+3 Modal might
+3 Modal may
+3 Modal must
+
+5.09 V V Vsuff
+5.09 VComp VComp Vsuff
+0.00 Vsuff -ed
+0.00 Vsuff -ing
+0.00 Vsuff -s
+0.00 Vsuff -0
+
+4.09 V have
+5.09 V be
+5.09 V is
+5.09 V fly
+5.09 V go
+5.09 V sleep
+5.09 V kiss
+5.09 V love
+5.09 V spoon
+4.09 V eat
+4.09 V duck
+4.09 V smile
+3.50 V want
+3.50 V fine
+5.09 VComp say
+5.09 VComp think
+4.09 VComp understand
+2.09 V understand
+4.09 V entice
+
+3.7 NP Papa
+3.7 NP Homer
+3.7 NP Marge
+3.7 NP Bart
+3.7 NP Grandma
+3.7 NP her
+3.7 NP she
+3.7 NP him
+3.7 NP he
+2.7 NP it
+3.7 NP they
+3.7 NP them
+
+3.7 N man
+3.7 N monkey
+3.7 N duck
+3.7 N fly
+3.7 N puppy
+3.7 N woman
+3.7 N smile
+3.7 N fine
+3.7 N bonbon
+3.7 N spoon
+3.7 N president
+3.7 N pickle
+3.7 N sandwich
+3.7 N floor
+3.7 N chief_of_staff
+3.7 N chiefs_of_staff
+
+4.09 Det a
+4.09 Det all
+4.09 Det every
+4.09 Det each
+4.09 Det two
+3.09 Det some
+3.09 Det the
+3.09 Det his
+3.09 Det her
+3.09 Det its
+3.09 Det their
+
+2.81 Adj fine
+2.81 Adj blue
+2.81 Adj delicious
+2.81 Adj perplexed
+2.81 Adj fly
+2.81 Adj pickled
+2.81 Adj unavailable
+2.81 Adj surprising
+
+0.00 PP P NP
+
+2.32 P with
+2.32 P on
+2.32 P onto
+2.32 P under
+2.32 P in

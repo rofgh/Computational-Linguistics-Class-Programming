@@ -1,0 +1,21 @@
+# Mary call -ed John .
+# Mary call -ed John from Boston .
+
+
+# -------------------------------------------------------------------------------- #
+# ROOT RULES
+10	ROOT		S PERIOD
+
+# -------------------------------------------------------------------------------- #
+# S (Sentence) RULES
+0 	S		NP	VP
+
+0	PERIOD	.
+
+0	NP		Mary
+0	NP		John
+
+0	VP		V	T
+
+0	V		call
+0	T		-ed
