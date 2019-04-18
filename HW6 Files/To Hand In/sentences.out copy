@@ -1,0 +1,184 @@
+1 
+PARSING::		Grandma love -s Bart and Marge . 
+
+Tree 1 weight: 32.37
+Tree 1 parse:
+(ROOT (S (NP Grandma)(VP (V (V love)(Vsuff -s))(NP (NP Bart)(ConjNP (Conj and)(NP Marge)))))(Period .))
+
+
+2 
+PARSING::		Grandma want -s to fly . 
+
+Tree 1 weight: 29.35
+Tree 1 parse:
+(ROOT (S (NP Grandma)(VP (V (V want)(Vsuff -s))(V (Inf to)(V fly))))(Period .))
+
+
+3 
+PARSING::		he be -s so fly ! 
+
+Tree 1 weight: 25.89
+Tree 1 parse:
+(ROOT (S (NP he)(VP (V (V be)(Vsuff -s))(Adj (Intens so)(Adj fly))))(Exclam !))
+
+
+4 
+PARSING::		Grandma sleep -s with a spoon . 
+
+Tree 1 weight: 36.89
+Tree 1 parse:
+(ROOT (S (NP Grandma)(VP (V (V sleep)(Vsuff -s))(PP (P with)(NP (Det a)(N spoon)))))(Period .))
+
+
+5 
+PARSING::		Grandma eat -ed with a spoon . 
+
+Tree 1 weight: 35.89
+Tree 1 parse:
+(ROOT (S (NP Grandma)(VP (V (V eat)(Vsuff -ed))(PP (P with)(NP (Det a)(N spoon)))))(Period .))
+
+
+6 
+PARSING::		every fine fly and monkey want to understand him . 
+
+Tree 1 weight: 46.66
+Tree 1 parse:
+(ROOT (S (NP (Det every)(N (Adj fine)(N (N fly)(ConjN (Conj and)(N monkey)))))(VP (V want)(VP (V (Inf to)(V understand))(NP him))))(Period .))
+
+
+Tree 2 weight: 46.66
+Tree 2 parse:
+(ROOT (S (NP (Det every)(N (N (Adj fine)(N fly))(ConjN (Conj and)(N monkey))))(VP (V want)(VP (V (Inf to)(V understand))(NP him))))(Period .))
+
+
+7 
+PARSING::		the duck eat -ed his delicious sandwich with a pickle . 
+
+Tree 1 weight: 59.57
+Tree 1 parse:
+(ROOT (S (NP (Det the)(N duck))(VP (V (V eat)(Vsuff -ed))(NP (Det his)(N (Adj delicious)(N (N sandwich)(PP (P with)(NP (Det a)(N pickle))))))))(Period .))
+
+
+Tree 2 weight: 59.57
+Tree 2 parse:
+(ROOT (S (NP (Det the)(N duck))(VP (V (V eat)(Vsuff -ed))(NP (Det his)(N (N (Adj delicious)(N sandwich))(PP (P with)(NP (Det a)(N pickle)))))))(Period .))
+
+
+Tree 3 weight: 61.68
+Tree 3 parse:
+(ROOT (S (NP (Det the)(N duck))(VP (VP (V (V eat)(Vsuff -ed))(NP (Det his)(N (Adj delicious)(N sandwich))))(PP (P with)(NP (Det a)(N pickle)))))(Period .))
+
+
+8 
+PARSING::		the monkey think -ed that the president want -ed his pickle on his sandwich . 
+
+Tree 1 weight: 73.95
+Tree 1 parse:
+(ROOT (S (NP (Det the)(N monkey))(VP (VComp (VComp think)(Vsuff -ed))(SBAR (Comp that)(S (NP (Det the)(N president))(VP (V (V want)(Vsuff -ed))(NP (Det his)(N (N pickle)(PP (P on)(NP (Det his)(N sandwich))))))))))(Period .))
+
+
+Tree 2 weight: 76.06
+Tree 2 parse:
+(ROOT (S (NP (Det the)(N monkey))(VP (VComp (VComp think)(Vsuff -ed))(SBAR (Comp that)(S (NP (Det the)(N president))(VP (VP (V (V want)(Vsuff -ed))(NP (Det his)(N pickle)))(PP (P on)(NP (Det his)(N sandwich))))))))(Period .))
+
+
+Tree 3 weight: 76.06
+Tree 3 parse:
+(ROOT (S (NP (Det the)(N monkey))(VP (VP (VComp (VComp think)(Vsuff -ed))(SBAR (Comp that)(S (NP (Det the)(N president))(VP (V (V want)(Vsuff -ed))(NP (Det his)(N pickle))))))(PP (P on)(NP (Det his)(N sandwich)))))(Period .))
+
+
+9 
+PARSING::		all monkey -s want to smile and kiss the puppy . 
+
+Tree 1 weight: 54.14
+Tree 1 parse:
+(ROOT (S (NP (Det all)(N (N monkey)(Plural -s)))(VP (V want)(VP (V (Inf to)(V (V smile)(ConjV (Conj and)(V kiss))))(NP (Det the)(N puppy)))))(Period .))
+
+
+Tree 2 weight: 54.14
+Tree 2 parse:
+(ROOT (S (NP (Det all)(N (N monkey)(Plural -s)))(VP (V want)(VP (V (V (Inf to)(V smile))(ConjV (Conj and)(V kiss)))(NP (Det the)(N puppy)))))(Period .))
+
+
+Tree 3 weight: 57.95
+Tree 3 parse:
+(ROOT (S (NP (Det all)(N (N monkey)(Plural -s)))(VP (VP (V want)(V (Inf to)(V smile)))(ConjVP (Conj and)(VP (V kiss)(NP (Det the)(N puppy))))))(Period .))
+
+
+10 
+PARSING::		some duck -s and somewhat perplexed puppy -s be -ed unavailable . 
+
+Tree 1 weight: 53.99
+Tree 1 parse:
+(ROOT (S (NP (Det some)(N (N (N duck)(Plural -s))(ConjN (Conj and)(N (Adj (Intens somewhat)(Adj perplexed))(N (N puppy)(Plural -s))))))(VP (V (V be)(Vsuff -ed))(Adj unavailable)))(Period .))
+
+
+Tree 2 weight: 53.99
+Tree 2 parse:
+(ROOT (S (NP (Det some)(N (N (N duck)(Plural -s))(ConjN (Conj and)(N (N (Adj (Intens somewhat)(Adj perplexed))(N puppy))(Plural -s)))))(VP (V (V be)(Vsuff -ed))(Adj unavailable)))(Period .))
+
+
+Tree 3 weight: 53.99
+Tree 3 parse:
+(ROOT (S (NP (Det some)(N (N (N (N duck)(Plural -s))(ConjN (Conj and)(N (Adj (Intens somewhat)(Adj perplexed))(N puppy))))(Plural -s)))(VP (V (V be)(Vsuff -ed))(Adj unavailable)))(Period .))
+
+
+11 
+PARSING::		the bonbon -s on the spoon entice -0 . 
+
+Tree 1 weight: 45.27
+Tree 1 parse:
+(ROOT (S (NP (Det the)(N (N (N bonbon)(Plural -s))(PP (P on)(NP (Det the)(N spoon)))))(V (V entice)(Vsuff -0)))(Period .))
+
+
+12 
+PARSING::		Papa say -s that Grandma might sleep on the floor ! 
+
+Tree 1 weight: 53.3
+Tree 1 parse:
+(ROOT (S (NP Papa)(VP (VComp (VComp say)(Vsuff -s))(SBAR (Comp that)(S (NP Grandma)(VP (Modal might)(VP (V sleep)(PP (P on)(NP (Det the)(N floor)))))))))(Exclam !))
+
+
+Tree 2 weight: 55.3
+Tree 2 parse:
+(ROOT (S (NP Papa)(VP (VComp (VComp say)(Vsuff -s))(SBAR (Comp that)(S (NP Grandma)(VP (VP (Modal might)(V sleep))(PP (P on)(NP (Det the)(N floor))))))))(Exclam !))
+
+
+Tree 3 weight: 55.3
+Tree 3 parse:
+(ROOT (S (NP Papa)(VP (VP (VComp (VComp say)(Vsuff -s))(SBAR (Comp that)(S (NP Grandma)(VP (Modal might)(V sleep)))))(PP (P on)(NP (Det the)(N floor)))))(Exclam !))
+
+
+13 
+PARSING::		the fine and blue woman and every man must have eat -ed two sandwich -s and sleep -ed on the floor . 
+
+Tree 1 weight: 118.16
+Tree 1 parse:
+(ROOT (S (NP (NP (Det the)(N (N fine)(ConjN (Conj and)(N (Adj blue)(N woman)))))(ConjNP (Conj and)(NP (Det every)(N man))))(VP (Modal must)(VP (V have)(VP (VP (V (V eat)(Vsuff -ed))(NP (Det two)(N (N sandwich)(Plural -s))))(ConjVP (Conj and)(VP (V (V sleep)(Vsuff -ed))(PP (P on)(NP (Det the)(N floor)))))))))(Period .))
+
+
+Tree 2 weight: 118.16
+Tree 2 parse:
+(ROOT (S (NP (NP (Det the)(N (N fine)(ConjN (Conj and)(N (Adj blue)(N woman)))))(ConjNP (Conj and)(NP (Det every)(N man))))(VP (Modal must)(VP (VP (V have)(VP (V (V eat)(Vsuff -ed))(NP (Det two)(N (N sandwich)(Plural -s)))))(ConjVP (Conj and)(VP (V (V sleep)(Vsuff -ed))(PP (P on)(NP (Det the)(N floor))))))))(Period .))
+
+
+Tree 3 weight: 118.16
+Tree 3 parse:
+(ROOT (S (NP (NP (Det the)(N (N fine)(ConjN (Conj and)(N (Adj blue)(N woman)))))(ConjNP (Conj and)(NP (Det every)(N man))))(VP (VP (Modal must)(VP (V have)(VP (V (V eat)(Vsuff -ed))(NP (Det two)(N (N sandwich)(Plural -s))))))(ConjVP (Conj and)(VP (V (V sleep)(Vsuff -ed))(PP (P on)(NP (Det the)(N floor)))))))(Period .))
+
+
+Tree 4 weight: 116.38
+Tree 4 parse:
+(ROOT (S (NP (NP (Det the)(N (Adj (Adj fine)(ConjAdj (Conj and)(Adj blue)))(N woman)))(ConjNP (Conj and)(NP (Det every)(N man))))(VP (Modal must)(VP (V have)(VP (VP (V (V eat)(Vsuff -ed))(NP (Det two)(N (N sandwich)(Plural -s))))(ConjVP (Conj and)(VP (V (V sleep)(Vsuff -ed))(PP (P on)(NP (Det the)(N floor)))))))))(Period .))
+
+
+Tree 5 weight: 116.38
+Tree 5 parse:
+(ROOT (S (NP (NP (Det the)(N (Adj (Adj fine)(ConjAdj (Conj and)(Adj blue)))(N woman)))(ConjNP (Conj and)(NP (Det every)(N man))))(VP (Modal must)(VP (VP (V have)(VP (V (V eat)(Vsuff -ed))(NP (Det two)(N (N sandwich)(Plural -s)))))(ConjVP (Conj and)(VP (V (V sleep)(Vsuff -ed))(PP (P on)(NP (Det the)(N floor))))))))(Period .))
+
+
+Tree 6 weight: 116.38
+Tree 6 parse:
+(ROOT (S (NP (NP (Det the)(N (Adj (Adj fine)(ConjAdj (Conj and)(Adj blue)))(N woman)))(ConjNP (Conj and)(NP (Det every)(N man))))(VP (VP (Modal must)(VP (V have)(VP (V (V eat)(Vsuff -ed))(NP (Det two)(N (N sandwich)(Plural -s))))))(ConjVP (Conj and)(VP (V (V sleep)(Vsuff -ed))(PP (P on)(NP (Det the)(N floor)))))))(Period .))
+
+
