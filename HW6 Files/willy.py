@@ -116,8 +116,12 @@ def main():
                 print >>outfile, bracketed
                 print '\n'
                 print >>outfile, '\n'
-                t = Tree.fromstring(bracketed)
-                t.draw()
+                try:
+                    if sys.argv[3]:
+                        t = Tree.fromstring(bracketed)
+                        t.draw()
+                except:
+                    pass
             else:
                 print "No parse!\n"
                 print >>outfile, "No parse!\n"
