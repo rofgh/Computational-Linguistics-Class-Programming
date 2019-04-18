@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+echo "NAME=\"Your Name Here\"" > CONFIG
+echo "ENVIRONMENT=\"Development\"" > CONFIG
